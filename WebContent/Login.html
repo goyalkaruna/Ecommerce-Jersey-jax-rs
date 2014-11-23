@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPE-273 Rest Service</title>
+</head>
+
+<body style="background-color: ; border-left: 10pt;">
+<img src="http://www.bloggerspace.in/wp-content/uploads/2014/04/Logo-e-commerce.jpg"/>
+
+		<form  onsubmit="return false;">
+			<input type="text" id="username" placeholder="Username" required/>
+			<input type="password" id="password" placeholder="Password"  required/>
+			<button id="login" onclick="LogInfun()">Login</button>
+		</form>
+	<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+	<script type="text/javascript">
+	
+	function checkUser()
+	{
+		
+		$.get("http://localhost:8080/RunSample/api/session/check",function(data,status){
+			 if(data.session=="exists")
+	   		 {
+		var parameters = location.search.split("?");
+			
+		var temp=parameters[1].split("=");
+	 
+   		 alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+   		 window.location.replace("http://localhost:8080/RunSample/Order.html?id="+temp[1]);
+	   		 }
+ 	 });
+		
+	}
+	
+	function LogInfun(){
+	var URL = "http://localhost:8080/RunSample/api/users/login";
+	//var parameters = location.search.split("?");
+	//var temp=parameters[1].split("=");
+	$.ajax({
+	
+			type: "POST",
+			url: URL,
+			contentType: "application/json",
+			dataType: 'json',
+			data : formToJSON(),
+				//success: function () { //success(data); }
+			success: function(data){
+				//JSON.stringify(data);
+				if(data.user=="valid")
+				{
+					var parameters = location.search.split("?");
+					var temp=parameters[1].split("=");
+                    console.log('Yes');
+			        alert("Login successful");
+			        window.location.replace("http://localhost:8080/RunSample/Order.html?id="+temp[1]);
+		
+					//window.location.replace("http://localhost:8080/RunSample/Order.html?id=");
+					//window.location.replace("http://localhost:8080/RunSample/Order.html?id=Mercedes");
+					
+					
+				}
+				else
+				{
+					alert("invalid");
+				}
+				
+				
+			}
+			,
+			complete: function(XMLHttpRequest) {
+				console.log( XMLHttpRequest.getAllResponseHeaders() );
+			},
+			error: function(textStatus, jqXHR,errorThrown){
+				console.log("Error " + jqXHR.getAllResponseHeaders() + " " + errorThrown);
+			}
+
+		});
+}
+
+function formToJSON() {
+    return JSON.stringify({
+    "username": $('#username').val(),
+    "pwd": $('#password').val(),
+    });
+}
+ </script>
+
+</body>
+</html>

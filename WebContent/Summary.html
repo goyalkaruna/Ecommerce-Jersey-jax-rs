@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Order</title>
+
+<title>Summary of Orders</title>
+</head>
+<body  onload="getSummary();" style="border-left: 10pt; background-color:">
+<img src="http://www.bloggerspace.in/wp-content/uploads/2014/04/Logo-e-commerce.jpg"/>
+
+<!-- Id:<label for="id" id="id"></label><br>
+Product id:<label for="productid" id="productid"></label><br>
+user:<label for="user" id="user"></label><br>
+ -->
+ <div align="center">
+<h2>Order Summary:</h2><br>
+<table id="personDataTable" border="1">
+    <tr>
+        <th>Order Id</th>
+        <th>Product Name</th>
+        <th>Date</th>
+    </tr>
+    
+</table>
+</div>
+<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+<script type="text/javascript">
+
+	function getSummary()
+	{	
+        
+		var url="http://localhost:8080/RunSample/api/summary/detail";
+		 $.get(url,function(data,status){
+		     console.log(data);   
+		     console.log(data.length);
+			 drawTable(data);
+		   		 	 });
+
+	}
+
+	function drawTable(data) {
+		
+	    for (var i = 0; i < data.length; i++) {
+	        drawRow(data[i]);
+	    }
+	
+	}
+
+	function drawRow(rowData) {
+		
+	    var row = $("<tr />")
+	    $("#personDataTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
+	    row.append($("<td>" + rowData.id + "</td>"));
+	    row.append($("<td>" + rowData.productid + "</td>"));
+	    row.append($("<td>" + rowData.date + "</td>"));
+	}
+	
+	
+
+</script>		 
+</body>
+</html>

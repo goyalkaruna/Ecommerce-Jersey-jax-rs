@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Order</title>
+
+<title>Confirmation</title>
+</head>
+<body  onload="getOrder();" style="border-left: 10pt; background-color:">
+<img src="http://www.bloggerspace.in/wp-content/uploads/2014/04/Logo-e-commerce.jpg"/>
+<H1><B>Congratulations !!!</B></H1>
+<div align="center">
+<h2>Order Details:</h2><br>
+Order id:<label for="orderid" id="orderid"></label><br>
+Order Date:<label for="date" id="date"></label><br>
+
+Order Status :<label for="orderstatus" id="orderstatus" ></label><br>
+Delivery Message:<label for="message" id="message"></label><br>
+Cancel Order :<label for="allowcancel" id="allowcancel"></label><br>
+Message :<label for="orderstatus1" id="orderstatus1"></label><br>
+<br>
+<button id="cancel" onclick="Cancel()">Cancel Order</button>
+
+<button id="summary" onclick="Summary()">Summary</button><br>
+</div>
+<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+<script type="text/javascript">
+	
+	function getOrder()
+	{	
+		var parameters = location.search.split("?");
+		var temp=parameters[1].split("=");
+		//window.location.replace("http://localhost:8080/RESTjava/Login.html?"+temp[1]);
+		var url="http://localhost:8080/RunSample/api/ship/"+temp[1];
+		
+		//window.location.replace("http://localhost:8080/RESTjava/Login.html?"+temp[1]);
+		
+		 $.get(url,function(data,status){
+   		 
+   		
+			 $('#orderid').text(data.orderid);
+   		 $('#orderstatus').text(data.orderstatus);
+   		 $('#date').text(data.date);
+   		 $('#message').text(data.message);
+   		$('#allowcancel').text(data.allowcancel);
+   		
+ 	 });
+		
+	}
+function Cancel(){
+	    alert("here");
+// 		var allowcancel = $('#allowcancel').text();
+ 		var orderid = $('#orderid').text(); //document.getElementById('orderid');
+ 	
+		
+// 		if (allowcancel == false) {
+// 	         window.alert("Order placed for more than three days. Cannot be cancelled");
+// 	         window.location.replace("http://localhost:8000/");
+// 	    } else{
+	    	
+// 	        alert("Cancelling the order...."+ orderid + "   "+ allowcancel);
+// 	        var url =  "http://localhost:8080/RunSample/api/cancel/"+orderid;
+// 	   	 $.get(url,function(data,status){
+	   		 
+	    		
+			 
+//    		 $('#orderstatus1').text(data.orderstatus);
+   		
+   		
+//  	 });
+// 	   	window.location.replace("http://localhost:8000/");
+// 	    }
+ 		var URL ="http://localhost:8080/RunSample/api/cancel/"+orderid;
+ 		$.ajax({
+ 	       
+ 		      
+			type: "POST",
+			url: URL,
+			contentType: "application/json",
+			dataType: 'json',
+			data : formToJSON(),
+			// alert(data.user);
+				//success: function () { //success(data); }
+			success: function(data){
+				//JSON.stringify(data);
+				alert("user"+data.user);
+				if(data.user!=null)
+				{
+				var parameters = location.search.split("?");
+        
+					var temp=parameters[1].split("=");
+		
+					//window.location.replace("http://localhost:8080/RESTjava/Login.html?"+temp[1]);
+					
+					window.location.replace("http://localhost:8080/RunSample/CancelOrder.html?id="+temp[1]);
+					
+					
+				}
+				else
+				{
+					alert("invalid");
+				}
+				
+				
+			}
+			,
+		
+			error: function(textStatus, jqXHR,errorThrown){
+				console.log("Error " + jqXHR.getAllResponseHeaders() + " " + errorThrown);
+			}
+
+		});
+	    }
+function Summary(){
+	window.location.replace("http://localhost:8080/RunSample/Summary.html");
+}
+function formToJSON() {
+    return JSON.stringify({
+    "orderid": $('#orderid').val(),
+    "orderstatus": $('#orderstatus').val(),
+    "user": $('#user').val()
+    });
+}
+	</script>
+</body>
+</html>

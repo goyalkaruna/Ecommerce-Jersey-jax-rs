@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Order</title>
+</head>
+<body onload="getDetail();">
+Hi !<label for=user id="user"></label>
+
+<img src="http://www.bloggerspace.in/wp-content/uploads/2014/04/Logo-e-commerce.jpg"/>
+
+<div align="center">
+<h2>Order Cancel Details:</h2><br>
+Order <label for=orderid id="orderid"></label> Cancelled Successfully<br>
+
+
+
+</div>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+<script type="text/javascript">
+	
+	function getDetail()
+	{
+		alert("hi");
+		var parameters = location.search.split("?");
+		var temp=parameters[1].split("=");
+		//window.location.replace("http://localhost:8080/RESTjava/Login.html?"+temp[1]);
+		var url="http://localhost:8080/RunSample/api/cancel/"+temp[1];
+		$('#orderid').text(temp[1]);
+		
+		 $.get(url,function(data,status){
+   		 $('#orderstatus').text(data.orderstatus);
+   		 $('#user').text(data.user)
+ 	 });
+		
+	}
+	
+	
+	</script>
+</body>
+</html>

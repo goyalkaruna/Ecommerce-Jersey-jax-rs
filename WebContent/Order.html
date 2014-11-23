@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Order</title>
+</head>
+<body  onload="getProduct();">
+Hi !
+
+<img src="http://www.bloggerspace.in/wp-content/uploads/2014/04/Logo-e-commerce.jpg"/>
+
+<div align="center">
+<h2>Product Details:</h2><br>
+Name:<label for="productName1" id="productName"></label><br>
+Price:<label for="productPrice1" id="productPrice"></label><br>
+Description:<label for="productDescription1" id="productDescription"></label><br>
+
+<form  onsubmit="return false;">
+<label for="username" id="username"></label><br>
+Add your details for delivery of the product:
+Apartment :<input type="text" name="apartment1" id="apartment"></input><br>
+Street :<input type="text" name="street1" id="street"></input><br>
+City :<input type="text" name="city1" id="city"></input><br>
+State :<input type="text" name="state1" id="state"></input><br>
+<br>
+Credit Card :<input type="text" name="credit1" id="credit"></input><br>
+<button id="submit" onclick="fillShipingDetails()">submit</button><br>
+</form>
+<br>
+</div>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+<script type="text/javascript">
+	
+	function getProduct()
+	{
+		
+		var parameters = location.search.split("?");
+		var temp=parameters[1].split("=");
+		//window.location.replace("http://localhost:8080/RESTjava/Login.html?"+temp[1]);
+		var url="http://localhost:8080/RunSample/api/products/"+temp[1];
+		
+		 $.get(url,function(data,status){
+   		 
+   		
+   		 
+   		 $('#productPrice').text(data.price);
+   		  $('#productName').text(data.brand);
+   		   $('#productDescription').text(data.desc);
+ 	 });
+		
+	}
+	
+	function fillShipingDetails()
+	{
+	
+		var URL = "http://localhost:8080/RunSample/api/order/shippingdetails";
+	
+	$.ajax({
+	       
+	      
+			type: "POST",
+			url: URL,
+			contentType: "application/json",
+			dataType: 'json',
+			data : formToJSON(),
+			// alert(data.user);
+				//success: function () { //success(data); }
+			success: function(data){
+				//JSON.stringify(data);
+				alert("user"+data.user);
+				if(data.user!=null)
+				{
+				var parameters = location.search.split("?");
+        
+					var temp=parameters[1].split("=");
+		
+					//window.location.replace("http://localhost:8080/RESTjava/Login.html?"+temp[1]);
+					
+					window.location.replace("http://localhost:8080/RunSample/Ship.html?id="+data.id);
+					
+					
+				}
+				else
+				{
+					alert("invalid");
+				}
+				
+				
+			}
+			,
+		
+			error: function(textStatus, jqXHR,errorThrown){
+				console.log("Error " + jqXHR.getAllResponseHeaders() + " " + errorThrown);
+			}
+
+		});
+		
+	}
+	
+	function formToJSON() {
+	var parameters = location.search.split("?");
+		var temp=parameters[1].split("=");
+    return JSON.stringify({
+    "apartment": $('#apartment').val(),
+    "street": $('#street').val(),
+    "city": $('#city').val(),
+    "state": $('#state').val(),
+    "credit": $('#credit').val(),
+    "productid":temp[1].toString(),
+    "productprice": $('#productPrice').text(),
+    "productname": $('#productName').text()
+    });
+}
+	</script>
+</body>
+</html>
